@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">RunningDynamics</string>
+    <string name="action_settings">Settings</string>
+    <string name="accel_x">X:</string>
+    <string name="val_undef">--</string>
+    <string name="accel_y">Y:</string>
+    <string name="accel_z">Z:</string>
+    <string name="sensor_not_available">accelerometer not available</string>
+</resources>
