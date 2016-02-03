@@ -15,21 +15,21 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final Integer AXIS_NUM = 3;
-    private final float G_VAL = 9.18f;
-
     private Sensor mSensor;
     private SensorManager mSensorManager;
 //    private CSVWriter mCSVWriter;
 
-    private TextView[] mTextValues = new TextView[AXIS_NUM];
-    private ProgressBar[] mProgressValues = new ProgressBar[AXIS_NUM];
+    private TextView[] mTextValues = new TextView[LinearAcceleration.AXIS_NUM];
+    private ProgressBar[] mProgressValues = new ProgressBar[LinearAcceleration.AXIS_NUM];
 
     private final SensorEventListener mSensorListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent event) {
-            updateUI(event);
-            store(event);
+            float[] linear_accel = LinearAcceleration.shared().linearAcceleration(event.values);
+            if(LinearAcceleration.shared().hasValues()) {
+                updateUI(linear_accel);
+                store(linear_accel,event.timestamp);
+            }
         }
 
         @Override
@@ -37,15 +37,15 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        protected final void updateUI(SensorEvent event) {
-            for(int i = 0; i < event.values.length && i < mTextValues.length; ++i) {
-                float v = event.values[i];
+        protected final void updateUI(float[] linear_accel) {
+            for(int i = 0; i < linear_accel.length && i < mTextValues.length; ++i) {
+                float v = linear_accel[i];
                 mTextValues[i].setText(String.format("%.3f", v));
-                mProgressValues[i].setProgress(Math.round(v / (2 * G_VAL) * 100));
+                mProgressValues[i].setProgress(50 + Math.round(v / (2 * LinearAcceleration.G_VAL) * 100));
             }
         }
 
-        protected final void store(SensorEvent event) {
+        protected final void store(float[] linear_accel,long timestamp) {
             // TODO: store the sensor event
             // unix_timestamp,accel_X,accel_Y,accel_Z
             // 123456,1.34556,1.3333,-0.15646
@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
             TextView status = (TextView) findViewById(R.id.tvwStatusValue);
             status.setText(mSensor.getVendor() + mSensor.getName());
             mSensorManager.registerListener(mSensorListener, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            LinearAcceleration.shared().resetGravity();
         }
     }
 
