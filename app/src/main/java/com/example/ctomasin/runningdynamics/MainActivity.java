@@ -10,15 +10,20 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final Integer AXIS_NUM = 3;
+    private final float G_VAL = 9.18f;
+
     private Sensor mSensor;
     private SensorManager mSensorManager;
-    private CSVWriter mCSVWriter;
+//    private CSVWriter mCSVWriter;
 
-    private TextView[] mValues = new TextView[3];
+    private TextView[] mTextValues = new TextView[AXIS_NUM];
+    private ProgressBar[] mProgressValues = new ProgressBar[AXIS_NUM];
 
     private final SensorEventListener mSensorListener = new SensorEventListener() {
         @Override
@@ -33,9 +38,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         protected final void updateUI(SensorEvent event) {
-            for(int i = 0; i < event.values.length && i < mValues.length; ++i) {
-                Float v = event.values[i];
-                mValues[i].setText(String.format("%.3f",v));
+            for(int i = 0; i < event.values.length && i < mTextValues.length; ++i) {
+                float v = event.values[i];
+                mTextValues[i].setText(String.format("%.3f", v));
+                mProgressValues[i].setProgress(Math.round(v / (2 * G_VAL) * 100));
             }
         }
 
@@ -53,11 +59,15 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mValues[0] = (TextView)findViewById(R.id.tvwXValue);
-        mValues[1] = (TextView)findViewById(R.id.tvwYValue);
-        mValues[2] = (TextView)findViewById(R.id.tvwZValue);
+        mTextValues[0] = (TextView)findViewById(R.id.tvwXValue);
+        mTextValues[1] = (TextView)findViewById(R.id.tvwYValue);
+        mTextValues[2] = (TextView)findViewById(R.id.tvwZValue);
 
-        mCSVWriter = openStoreFile();
+        mProgressValues[0] = (ProgressBar)findViewById(R.id.pbXValue);
+        mProgressValues[1] = (ProgressBar)findViewById(R.id.pbYValue);
+        mProgressValues[2] = (ProgressBar)findViewById(R.id.pbZValue);
+
+//        mCSVWriter = openStoreFile();
     }
 
     @Override
@@ -68,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d("sensors", mSensorManager.getSensorList(Sensor.TYPE_ALL).toString());
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        if(null == mSensor) mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         if (null == mSensor) {
             TextView status = (TextView) findViewById(R.id.tvwStatusValue);
             status.setText(R.string.sensor_not_available);
@@ -108,8 +119,8 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    protected final CSVWriter openStoreFile() {
-        // TODO: aprire il CSVWriter
-
-    }
+//    protected final CSVWriter openStoreFile() {
+//        // TODO: aprire il CSVWriter
+//
+//    }
 }
