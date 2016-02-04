@@ -137,10 +137,10 @@
             android:mirrorForRtl="false" />
     </RelativeLayout>
 
-    <SurfaceView
+    <com.example.ctomasin.runningdynamics.AccTrack
+        android:id="@+id/svTrack"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/surfaceView"
         android:layout_weight="1" />
 
     <RelativeLayout

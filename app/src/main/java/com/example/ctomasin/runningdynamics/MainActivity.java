@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView[] mTextValues = new TextView[LinearAcceleration.AXIS_NUM];
     private ProgressBar[] mProgressValues = new ProgressBar[LinearAcceleration.AXIS_NUM];
+    private AccTrack mAccTrack;
 
     private final SensorEventListener mSensorListener = new SensorEventListener() {
         @Override
@@ -66,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
         mProgressValues[0] = (ProgressBar)findViewById(R.id.pbXValue);
         mProgressValues[1] = (ProgressBar)findViewById(R.id.pbYValue);
         mProgressValues[2] = (ProgressBar)findViewById(R.id.pbZValue);
+
+        mAccTrack = findViewById(R.id.svTrack);
 
 //        mCSVWriter = openStoreFile();
     }
