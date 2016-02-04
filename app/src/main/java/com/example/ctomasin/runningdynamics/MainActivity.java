@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 float v = linear_accel[i];
                 mTextValues[i].setText(String.format("%.3f", v));
                 mProgressValues[i].setProgress(50 + Math.round(v / (2 * LinearAcceleration.G_VAL) * 100));
+                mAccTrack.addValues(linear_accel);
             }
         }
 
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         mProgressValues[1] = (ProgressBar)findViewById(R.id.pbYValue);
         mProgressValues[2] = (ProgressBar)findViewById(R.id.pbZValue);
 
-        mAccTrack = findViewById(R.id.svTrack);
+        mAccTrack = (AccTrack)findViewById(R.id.svTrack);
 
 //        mCSVWriter = openStoreFile();
     }
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             TextView status = (TextView) findViewById(R.id.tvwStatusValue);
             status.setText(mSensor.getVendor() + mSensor.getName());
-            mSensorManager.registerListener(mSensorListener, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            mSensorManager.registerListener(mSensorListener, mSensor, SensorManager.SENSOR_DELAY_UI);
             LinearAcceleration.shared().resetGravity();
         }
     }
