@@ -15,6 +15,10 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
+    static {
+        System.loadLibrary("runingd");
+    }
+
     private Sensor mSensor;
     private SensorManager mSensorManager;
 //    private CSVWriter mCSVWriter;

@@ -35,14 +35,7 @@ public class LinearAcceleration {
         }
     }
 
-    public final float[] linearAcceleration(float[] values) {
-        for(int i = 0; i < AXIS_NUM; ++i) {
-            mGravity[i] =  ALPHA * mGravity[i] + (1 - ALPHA) * values[i];
-            values[i] = values[i] - mGravity[i];
-        }
-        if(mNumGravitySamples < GRAVITY_SAMPLES_NUM) ++mNumGravitySamples;
-        return values;
-    }
+    public native final float[] linearAcceleration(float[] values);
 
     public final boolean hasValues() {
         return (mNumGravitySamples >= GRAVITY_SAMPLES_NUM);
