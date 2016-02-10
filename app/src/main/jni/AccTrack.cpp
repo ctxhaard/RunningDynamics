@@ -24,15 +24,16 @@ JNIEXPORT void JNICALL Java_com_example_ctomasin_runningdynamics_AccTrack_addVal
         (JNIEnv *env, jobject self, jfloatArray jVals)
 {
     jclass clazz = env->GetObjectClass(self);
-    jobject mPoints = env->GetObjectField(self,env->GetFieldID(clazz,"mPoints","Ljava/util/ArrayList"));
+    jobject mPoints = env->GetObjectField(self,env->GetFieldID(clazz,"mPoints","Ljava/util/ArrayList;"));
     jint mHeight = env->GetIntField(self,env->GetFieldID(clazz,"mHeight","I"));
 
     jboolean isCopy;
     jfloat *vals = env->GetFloatArrayElements(jVals,&isCopy);
 
-    jint size = env->CallIntMethod(mPoints,env->GetMethodID(clazz,"size","()I"));
+    jclass mPointsClass = env->GetObjectClass(mPoints);
+    jint size = env->CallIntMethod(mPoints,env->GetMethodID(mPointsClass,"size","()I"));
     if(size > SAMPLES_NUM) {
-        env->CallVoidMethod(mPoints,env->GetMethodID(clazz,"remove","(I)V"),0);
+        env->CallObjectMethod(mPoints,env->GetMethodID(mPointsClass,"remove","(I)Ljava/lang/Object;"),0);
     }
 
     float points[AXIS_NUM];
@@ -44,7 +45,7 @@ JNIEXPORT void JNICALL Java_com_example_ctomasin_runningdynamics_AccTrack_addVal
 
     jfloatArray jpoints = env->NewFloatArray(AXIS_NUM);
     env->SetFloatArrayRegion(jpoints,0,AXIS_NUM,points);
-    env->CallVoidMethod(mPoints,env->GetMethodID(clazz,"add","(Ljava/lang/Object)V"),jpoints);
+    env->CallBooleanMethod(mPoints,env->GetMethodID(mPointsClass,"add","(Ljava/lang/Object;)Z"),jpoints);
 
     env->CallVoidMethod(self,env->GetMethodID(clazz,"invalidate","()V"));
 }
